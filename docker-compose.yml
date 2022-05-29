@@ -12,6 +12,7 @@ services:
             MYSQL_PASSWORD: password
             MYSQL_DATABASE: customerdb
 
+
     # Install Target MySQL DB and setup the Customer database
     cdc-mysql-2:
         container_name: cdc-target-database
