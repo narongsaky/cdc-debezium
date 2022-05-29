@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+    # Install Source MySQL DB and setup the Customer database
+    cdc-mysql-1:
+        container_name: cdc-source-database
+        image: mysql
+        ports:
+        - 3304:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: customerdb
+
+    # Install Target MySQL DB and setup the Customer database
+    cdc-mysql-2:
+        container_name: cdc-target-database
+        image: mysql
+        ports:
+        - 3305:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: customerdb
