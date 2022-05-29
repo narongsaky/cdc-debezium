@@ -1,4 +1,4 @@
-package com.example.cdcdebezium;
+package com.example.cdcdebezium.debezium;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

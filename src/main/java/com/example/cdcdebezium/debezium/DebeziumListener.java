@@ -1,5 +1,8 @@
-package com.example.cdcdebezium;
+package com.example.cdcdebezium.debezium;
 
+import com.example.cdcdebezium.kafka.KafkaPayload;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.debezium.config.Configuration;
 import io.debezium.embedded.Connect;
 import io.debezium.engine.DebeziumEngine;
@@ -9,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.source.SourceRecord;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +22,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static com.example.cdcdebezium.kafka.KafkaConfig.TOPIC_CDC_CUSTOMER;
 import static io.debezium.data.Envelope.FieldName.*;
 import static io.debezium.data.Envelope.Operation;
 import static java.util.stream.Collectors.toMap;
@@ -30,14 +35,16 @@ public class DebeziumListener {
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final DebeziumEngine<RecordChangeEvent<SourceRecord>> debeziumEngine;
 
-    private final CustomerService customerService;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
-    public DebeziumListener(Configuration customerConnectorConfiguration, CustomerService customerService) {
+    public DebeziumListener(Configuration customerConnectorConfiguration, KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
         this.debeziumEngine = DebeziumEngine.create(ChangeEventFormat.of(Connect.class))
                 .using(customerConnectorConfiguration.asProperties())
                 .notifying(this::handleChangeEvent)
                 .build();
-        this.customerService = customerService;
+        this.kafkaTemplate = kafkaTemplate;
+        this.objectMapper = objectMapper;
     }
 
     private void handleChangeEvent(RecordChangeEvent<SourceRecord> sourceRecordRecordChangeEvent) {
@@ -60,7 +67,17 @@ public class DebeziumListener {
                         .map(fieldName -> Pair.of(fieldName, struct.get(fieldName)))
                         .collect(toMap(Pair::getKey, Pair::getValue));
 
-                this.customerService.replicateData(payload, operation);
+
+                KafkaPayload kafkaPayload = new KafkaPayload();
+                kafkaPayload.setOperation(operation.toString());
+                kafkaPayload.setData(payload);
+                try {
+                    kafkaTemplate.send(TOPIC_CDC_CUSTOMER, this.objectMapper.writeValueAsString(kafkaPayload));
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+
+//                this.customerService.replicateData(payload, operation);
                 log.info("Updated Data: {} with Operation: {}", payload, operation.name());
             }
         }

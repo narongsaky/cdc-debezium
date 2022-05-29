@@ -1,4 +1,4 @@
-package com.example.cdcdebezium;
+package com.example.cdcdebezium.repo;
 
 import lombok.Getter;
 import lombok.Setter;

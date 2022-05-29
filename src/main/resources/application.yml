@@ -20,6 +20,9 @@ customer:
     username: root
     password: root
 
+kafka:
+  bootstrapAddress: localhost:9092
+
 ## Logging properties
 logging:
   level:
@@ -32,39 +35,3 @@ logging:
       baeldung:
         libraries:
           debezium: DEBUG
-
-#debezium:
-#  properties:
-#    database:
-#      dbname: delivery
-#      port: '3306'
-#      server:
-#        id: '85744'
-#        name: debezium-connector
-#      hostname: localhost
-#      password: password
-#      history:
-#        file:
-#          filename: /Users/oleksandr.hladun/debezium/dbhistory.dat
-#        nodeValue: io.debezium.relational.history.FileDatabaseHistory
-#      allowPublicKeyRetrieval: 'true'
-#      user: root
-#      include:
-#        list: delivery
-#    offset:
-#      flush:
-#        interval:
-#          ms: '60000'
-#      storage:
-#        file:
-#          filename: /Users/oleksandr.hladun/debezium//offset.dat
-#        nodeValue: org.apache.kafka.connect.storage.FileOffsetBackingStore
-#    include:
-#      schema:
-#        changes: 'false'
-#    name: my-sql-connector
-#    connector:
-#      class: io.debezium.connector.mysql.MySqlConnector
-#    table:
-#      include:
-#        list: delivery.outbox

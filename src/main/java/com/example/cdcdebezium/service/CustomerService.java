@@ -1,5 +1,7 @@
-package com.example.cdcdebezium;
+package com.example.cdcdebezium.service;
 
+import com.example.cdcdebezium.repo.Customer;
+import com.example.cdcdebezium.repo.CustomerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.debezium.data.Envelope.Operation;
 import org.springframework.stereotype.Service;
