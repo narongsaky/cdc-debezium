@@ -31,7 +31,3 @@ logging:
       debezium:
         mysql:
           BinlogReader: INFO
-    com:
-      baeldung:
-        libraries:
-          debezium: DEBUG

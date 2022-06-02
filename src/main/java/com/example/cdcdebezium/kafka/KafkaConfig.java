@@ -30,7 +30,7 @@ public class KafkaConfig {
     @Bean
     public NewTopic cdcCustomer() {
         return TopicBuilder.name(TOPIC_CDC_CUSTOMER)
-                .partitions(2)
+                .partitions(1)
                 .replicas(1).build();
     }
 
@@ -71,7 +71,7 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-        factory.setConcurrency(2);
+        factory.setConcurrency(1);
         factory.setErrorHandler(((exception, data) -> {
             log.error("Error in job service kafka process with Exception {} and the record is {}", exception, data);
         }));

@@ -7,6 +7,7 @@ import io.debezium.data.Envelope.Operation;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class CustomerService {
@@ -17,14 +18,15 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public void replicateData(Map<String, Object> customerData, Operation operation) {
+    public void replicateData(Map<String, Object> customerData, String operation) {
         final ObjectMapper mapper = new ObjectMapper();
         final Customer customer = mapper.convertValue(customerData, Customer.class);
 
-        if (Operation.DELETE == operation) {
+        if (Objects.equals(Operation.DELETE.name(), operation)) {
             customerRepository.deleteById(customer.getId());
         } else {
             customerRepository.save(customer);
         }
     }
+
 }

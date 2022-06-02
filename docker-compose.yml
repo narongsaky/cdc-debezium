@@ -4,6 +4,7 @@ services:
     cdc-mysql-1:
         container_name: cdc-source-database
         image: mysql
+        platform: linux/amd64
         ports:
         - 3304:3306
         environment:
@@ -17,6 +18,7 @@ services:
     cdc-mysql-2:
         container_name: cdc-target-database
         image: mysql
+        platform: linux/amd64
         ports:
         - 3305:3306
         environment:
@@ -27,6 +29,7 @@ services:
 
     cdc-zoo1:
         image: confluentinc/cp-zookeeper:7.1.1
+        platform: linux/amd64
         hostname: cdc-zoo1
         container_name: cdc-zoo1
         ports:
@@ -38,6 +41,7 @@ services:
 
     cdc-kafka1:
         image: confluentinc/cp-kafka:7.1.1
+        platform: linux/amd64
         hostname: cdc-kafka1
         container_name: cdc-kafka1
         ports:
