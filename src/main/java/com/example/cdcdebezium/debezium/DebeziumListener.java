@@ -77,7 +77,6 @@ public class DebeziumListener {
                     throw new RuntimeException(e);
                 }
 
-//                this.customerService.replicateData(payload, operation);
                 log.info("Updated Data: {} with Operation: {}", payload, operation.name());
             }
         }
